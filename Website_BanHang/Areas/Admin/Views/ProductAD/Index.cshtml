@@ -1,0 +1,67 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<Website_BanHang.Context.Product>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Trang Sản Phẩm</h2>
+@using (Html.BeginForm("Index","ProductAD",FormMethod.Get))
+            {
+                <p>
+                    Tìm tên sản phẩm: @Html.TextBox("SearchString",ViewBag.CurrentFilter as string)
+                    <input placeholder="Nhập tên sản phẩm" type="submit" value="Tìm kiếm" />
+                </p>
+            }
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div style="overflow:auto">
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().avatar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().categoryID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().typeID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td>
+            
+            <img src="~/Content/images/product/@item.avatar" width="20%">
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.categoryID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.typeID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Detail", "Detail", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
+    </div>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model,page => Url.Action("Index",
+ new {page, currentFilter = ViewBag.CurrentFilter }))
